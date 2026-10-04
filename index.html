@@ -1,0 +1,1772 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>CloudVote - Online Voting System</title>
+
+<style>
+
+/* =========================
+   GLOBAL
+========================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+button,
+input {
+    font-family: inherit;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+header {
+    background: linear-gradient(135deg, #1e3a8a, #2563eb);
+    color: white;
+    min-height: 70px;
+    padding: 0 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.logo span {
+    color: #bfdbfe;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.cloud-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.online-dot {
+    width: 10px;
+    height: 10px;
+    background: #22c55e;
+    border-radius: 50%;
+}
+
+
+/* =========================
+   MAIN
+========================= */
+
+.container {
+    width: 92%;
+    max-width: 1250px;
+    margin: 30px auto;
+}
+
+
+/* =========================
+   WELCOME
+========================= */
+
+.welcome {
+    background: white;
+    padding: 25px;
+    border-radius: 18px;
+    margin-bottom: 25px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.07);
+}
+
+.welcome h1 {
+    color: #1e3a8a;
+    margin-bottom: 8px;
+}
+
+.welcome p {
+    color: #64748b;
+    line-height: 1.6;
+}
+
+
+/* =========================
+   STATISTICS
+========================= */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 25px;
+}
+
+.stat-card {
+    background: white;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.07);
+}
+
+.stat-icon {
+    font-size: 30px;
+    margin-bottom: 8px;
+}
+
+.stat-card h2 {
+    font-size: 27px;
+    margin-bottom: 5px;
+}
+
+.stat-card p {
+    color: #64748b;
+    font-size: 13px;
+}
+
+
+/* =========================
+   GRID
+========================= */
+
+.main-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 25px;
+}
+
+
+/* =========================
+   CARD
+========================= */
+
+.card {
+    background: white;
+    padding: 23px;
+    border-radius: 18px;
+    margin-bottom: 25px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.07);
+}
+
+.card-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.card-title h2 {
+    font-size: 19px;
+}
+
+
+/* =========================
+   BUTTONS
+========================= */
+
+.btn {
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.primary {
+    background: #2563eb;
+    color: white;
+}
+
+.primary:hover {
+    background: #1d4ed8;
+}
+
+.success {
+    background: #16a34a;
+    color: white;
+}
+
+.danger {
+    background: #dc2626;
+    color: white;
+}
+
+.gray {
+    background: #e2e8f0;
+    color: #334155;
+}
+
+
+/* =========================
+   CANDIDATES
+========================= */
+
+.candidates {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.candidate {
+    border: 1px solid #e2e8f0;
+    border-radius: 15px;
+    padding: 18px;
+    transition: 0.2s;
+}
+
+.candidate:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.candidate-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.candidate-avatar {
+    width: 52px;
+    height: 52px;
+    background: #dbeafe;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 26px;
+}
+
+.candidate h3 {
+    font-size: 16px;
+}
+
+.candidate p {
+    color: #64748b;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.vote-btn {
+    width: 100%;
+    margin-top: 12px;
+    background: #2563eb;
+    color: white;
+}
+
+.vote-btn:hover {
+    background: #1d4ed8;
+}
+
+.vote-btn:disabled {
+    background: #94a3b8;
+    cursor: not-allowed;
+}
+
+
+/* =========================
+   RESULTS
+========================= */
+
+.result {
+    margin-bottom: 18px;
+}
+
+.result-top {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    margin-bottom: 7px;
+}
+
+.result-bar {
+    width: 100%;
+    height: 12px;
+    background: #e2e8f0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.result-fill {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.5s;
+}
+
+.blue {
+    background: #2563eb;
+}
+
+.green {
+    background: #16a34a;
+}
+
+.orange {
+    background: #f97316;
+}
+
+.purple {
+    background: #7c3aed;
+}
+
+
+/* =========================
+   VOTER FORM
+========================= */
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    outline: none;
+}
+
+.form-group input:focus {
+    border-color: #2563eb;
+}
+
+.full-btn {
+    width: 100%;
+}
+
+
+/* =========================
+   SECURITY
+========================= */
+
+.security-item {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    padding: 13px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.security-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #dcfce7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.security-item strong {
+    font-size: 13px;
+}
+
+.security-item p {
+    color: #64748b;
+    font-size: 11px;
+    margin-top: 3px;
+}
+
+
+/* =========================
+   ACTIVITY
+========================= */
+
+.activity {
+    display: flex;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.activity-icon {
+    font-size: 18px;
+}
+
+.activity strong {
+    font-size: 13px;
+}
+
+.activity small {
+    display: block;
+    color: #64748b;
+    margin-top: 3px;
+}
+
+
+/* =========================
+   MODAL
+========================= */
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15,23,42,0.7);
+    z-index: 100;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-box {
+    width: 90%;
+    max-width: 470px;
+    background: white;
+    border-radius: 18px;
+    padding: 28px;
+}
+
+.modal-box h2 {
+    color: #1e3a8a;
+    margin-bottom: 15px;
+}
+
+.modal-box p {
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+
+/* =========================
+   NOTIFICATION
+========================= */
+
+.notification {
+    position: fixed;
+    right: 25px;
+    bottom: 25px;
+    background: #0f172a;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 10px;
+    display: none;
+    z-index: 200;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer {
+    text-align: center;
+    padding: 25px;
+    color: #64748b;
+    font-size: 13px;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width: 950px) {
+
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .main-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media(max-width: 600px) {
+
+    .cloud-status {
+        display: none;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    .candidates {
+        grid-template-columns: 1fr;
+    }
+
+    .container {
+        width: 94%;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- ================= HEADER ================= -->
+
+<header>
+
+    <div class="logo">
+        🗳️ Cloud<span>Vote</span>
+    </div>
+
+    <div class="header-right">
+
+        <div class="cloud-status">
+
+            <span class="online-dot"></span>
+
+            Secure Cloud Online
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- ================= MAIN ================= -->
+
+<div class="container">
+
+
+    <!-- WELCOME -->
+
+    <section class="welcome">
+
+        <h1>
+            Cloud-Based Online Voting System
+        </h1>
+
+        <p>
+            A secure digital voting platform for voter
+            registration, candidate selection, vote submission
+            and result monitoring using cloud-based services.
+        </p>
+
+    </section>
+
+
+    <!-- STATISTICS -->
+
+    <section class="stats">
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                👥
+            </div>
+
+            <h2 id="voterCount">
+                2,450
+            </h2>
+
+            <p>
+                Registered Voters
+            </p>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🗳️
+            </div>
+
+            <h2 id="voteCount">
+                1,827
+            </h2>
+
+            <p>
+                Votes Submitted
+            </p>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                👤
+            </div>
+
+            <h2>
+                4
+            </h2>
+
+            <p>
+                Candidates
+            </p>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🔐
+            </div>
+
+            <h2>
+                100%
+            </h2>
+
+            <p>
+                Security Status
+            </p>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- MAIN GRID -->
+
+    <section class="main-grid">
+
+
+        <!-- LEFT -->
+
+        <div>
+
+
+            <!-- CANDIDATES -->
+
+            <div class="card">
+
+                <div class="card-title">
+
+                    <h2>
+                        👤 Candidates
+                    </h2>
+
+                    <span class="badge">
+                        Election 2026
+                    </span>
+
+                </div>
+
+
+                <div class="candidates">
+
+
+                    <div class="candidate">
+
+                        <div class="candidate-top">
+
+                            <div class="candidate-avatar">
+                                👨‍💼
+                            </div>
+
+                            <div>
+
+                                <h3>
+                                    Arun Kumar
+                                </h3>
+
+                                <p>
+                                    Digital Progress Party
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <p>
+                            Symbol: 🚀 Rocket
+                        </p>
+
+                        <button
+                            class="btn vote-btn"
+                            onclick="selectCandidate('Arun Kumar')">
+
+                            Vote for Candidate
+
+                        </button>
+
+                    </div>
+
+
+                    <div class="candidate">
+
+                        <div class="candidate-top">
+
+                            <div class="candidate-avatar">
+                                👩‍💼
+                            </div>
+
+                            <div>
+
+                                <h3>
+                                    Priya Sharma
+                                </h3>
+
+                                <p>
+                                    People's Development Party
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <p>
+                            Symbol: 🌳 Tree
+                        </p>
+
+                        <button
+                            class="btn vote-btn"
+                            onclick="selectCandidate('Priya Sharma')">
+
+                            Vote for Candidate
+
+                        </button>
+
+                    </div>
+
+
+                    <div class="candidate">
+
+                        <div class="candidate-top">
+
+                            <div class="candidate-avatar">
+                                👨‍💻
+                            </div>
+
+                            <div>
+
+                                <h3>
+                                    Rahul Verma
+                                </h3>
+
+                                <p>
+                                    Technology First Party
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <p>
+                            Symbol: 💻 Computer
+                        </p>
+
+                        <button
+                            class="btn vote-btn"
+                            onclick="selectCandidate('Rahul Verma')">
+
+                            Vote for Candidate
+
+                        </button>
+
+                    </div>
+
+
+                    <div class="candidate">
+
+                        <div class="candidate-top">
+
+                            <div class="candidate-avatar">
+                                👩‍🏫
+                            </div>
+
+                            <div>
+
+                                <h3>
+                                    Meena Reddy
+                                </h3>
+
+                                <p>
+                                    Education & Welfare Party
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <p>
+                            Symbol: 📚 Book
+                        </p>
+
+                        <button
+                            class="btn vote-btn"
+                            onclick="selectCandidate('Meena Reddy')">
+
+                            Vote for Candidate
+
+                        </button>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+            <!-- LIVE RESULTS -->
+
+            <div class="card">
+
+                <div class="card-title">
+
+                    <h2>
+                        📊 Live Voting Results
+                    </h2>
+
+                    <span
+                        class="badge"
+                        style="background:#dcfce7;color:#15803d;">
+
+                        Live
+
+                    </span>
+
+                </div>
+
+
+                <div class="result">
+
+                    <div class="result-top">
+
+                        <span>
+                            Arun Kumar
+                        </span>
+
+                        <strong id="result1">
+                            38%
+                        </strong>
+
+                    </div>
+
+                    <div class="result-bar">
+
+                        <div
+                            id="bar1"
+                            class="result-fill blue"
+                            style="width:38%;">
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="result">
+
+                    <div class="result-top">
+
+                        <span>
+                            Priya Sharma
+                        </span>
+
+                        <strong id="result2">
+                            31%
+                        </strong>
+
+                    </div>
+
+                    <div class="result-bar">
+
+                        <div
+                            id="bar2"
+                            class="result-fill green"
+                            style="width:31%;">
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="result">
+
+                    <div class="result-top">
+
+                        <span>
+                            Rahul Verma
+                        </span>
+
+                        <strong id="result3">
+                            19%
+                        </strong>
+
+                    </div>
+
+                    <div class="result-bar">
+
+                        <div
+                            id="bar3"
+                            class="result-fill orange"
+                            style="width:19%;">
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="result">
+
+                    <div class="result-top">
+
+                        <span>
+                            Meena Reddy
+                        </span>
+
+                        <strong id="result4">
+                            12%
+                        </strong>
+
+                    </div>
+
+                    <div class="result-bar">
+
+                        <div
+                            id="bar4"
+                            class="result-fill purple"
+                            style="width:12%;">
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ACTIVITY -->
+
+            <div class="card">
+
+                <div class="card-title">
+
+                    <h2>
+                        📋 Recent Activity
+                    </h2>
+
+                </div>
+
+
+                <div id="activityList">
+
+                    <div class="activity">
+
+                        <div class="activity-icon">
+                            ✅
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Vote successfully recorded
+                            </strong>
+
+                            <small>
+                                Today, 10:35 AM
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="activity">
+
+                        <div class="activity-icon">
+                            🔐
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Voter authentication completed
+                            </strong>
+
+                            <small>
+                                Today, 10:28 AM
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="activity">
+
+                        <div class="activity-icon">
+                            ☁️
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Voting database synchronized
+                            </strong>
+
+                            <small>
+                                Today, 10:15 AM
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- RIGHT -->
+
+        <div>
+
+
+            <!-- VOTER REGISTRATION -->
+
+            <div class="card">
+
+                <div class="card-title">
+
+                    <h2>
+                        📝 Voter Registration
+                    </h2>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Voter Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="voterName"
+                        placeholder="Enter your name">
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Voter ID
+                    </label>
+
+                    <input
+                        type="text"
+                        id="voterId"
+                        placeholder="Enter voter ID">
+
+                </div>
+
+
+                <button
+                    class="btn primary full-btn"
+                    onclick="registerVoter()">
+
+                    Register Voter
+
+                </button>
+
+            </div>
+
+
+            <!-- SECURITY -->
+
+            <div class="card">
+
+                <div class="card-title">
+
+                    <h2>
+                        🔐 Security
+                    </h2>
+
+                </div>
+
+
+                <div class="security-item">
+
+                    <div class="security-icon">
+                        🔒
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Encrypted Voting
+                        </strong>
+
+                        <p>
+                            Votes are protected.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="security-item">
+
+                    <div class="security-icon">
+                        🛡️
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Voter Verification
+                        </strong>
+
+                        <p>
+                            Identity validation enabled.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="security-item">
+
+                    <div class="security-icon">
+                        ☁️
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Cloud Backup
+                        </strong>
+
+                        <p>
+                            Voting data backed up.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="security-item">
+
+                    <div class="security-icon">
+                        📊
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Audit Logs
+                        </strong>
+
+                        <p>
+                            Voting activity monitored.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- CLOUD -->
+
+            <div class="card">
+
+                <div class="card-title">
+
+                    <h2>
+                        ☁️ Cloud Status
+                    </h2>
+
+                </div>
+
+
+                <div class="activity">
+
+                    <div class="activity-icon">
+                        🟢
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Voting Server
+                        </strong>
+
+                        <small>
+                            Online
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="activity">
+
+                    <div class="activity-icon">
+                        🟢
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Database
+                        </strong>
+
+                        <small>
+                            Connected
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="activity">
+
+                    <div class="activity-icon">
+                        🟢
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Backup Service
+                        </strong>
+
+                        <small>
+                            Active
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ELECTION INFO -->
+
+            <div class="card">
+
+                <div class="card-title">
+
+                    <h2>
+                        ℹ️ Election Information
+                    </h2>
+
+                </div>
+
+                <p style="
+                    color:#64748b;
+                    font-size:13px;
+                    line-height:1.7;
+                ">
+
+                    Election: Student Council Election<br>
+
+                    Year: 2026<br>
+
+                    Candidates: 4<br>
+
+                    Voting Status:
+                    <strong style="color:#16a34a;">
+                        Active
+                    </strong>
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<!-- ================= VOTE CONFIRMATION MODAL ================= -->
+
+<div
+    class="modal"
+    id="voteModal">
+
+    <div class="modal-box">
+
+        <h2>
+            🗳️ Confirm Your Vote
+        </h2>
+
+        <p>
+            You selected:
+            <strong id="selectedCandidate">
+            </strong>
+            <br><br>
+            Are you sure you want to submit your vote?
+            This demo will record your selection.
+        </p>
+
+        <div class="modal-actions">
+
+            <button
+                class="btn gray"
+                onclick="closeVoteModal()">
+
+                Cancel
+
+            </button>
+
+            <button
+                class="btn primary"
+                onclick="confirmVote()">
+
+                Confirm Vote
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= NOTIFICATION ================= -->
+
+<div
+    class="notification"
+    id="notification">
+</div>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    © 2026 CloudVote |
+    Cloud-Based Online Voting System
+
+</footer>
+
+
+<script>
+
+/* =========================
+   VARIABLES
+========================= */
+
+let selectedCandidate = "";
+
+let hasVoted = false;
+
+
+/* =========================
+   NOTIFICATION
+========================= */
+
+function showNotification(message) {
+
+    const notification =
+        document.getElementById("notification");
+
+    notification.textContent = message;
+
+    notification.style.display = "block";
+
+    setTimeout(function() {
+
+        notification.style.display = "none";
+
+    }, 3000);
+
+}
+
+
+/* =========================
+   SELECT CANDIDATE
+========================= */
+
+function selectCandidate(candidate) {
+
+    if (hasVoted) {
+
+        showNotification(
+            "⚠️ You have already voted."
+        );
+
+        return;
+
+    }
+
+
+    selectedCandidate = candidate;
+
+
+    document.getElementById(
+        "selectedCandidate"
+    ).textContent = candidate;
+
+
+    document.getElementById(
+        "voteModal"
+    ).style.display = "flex";
+
+}
+
+
+/* =========================
+   CLOSE MODAL
+========================= */
+
+function closeVoteModal() {
+
+    document.getElementById(
+        "voteModal"
+    ).style.display = "none";
+
+}
+
+
+/* =========================
+   CONFIRM VOTE
+========================= */
+
+function confirmVote() {
+
+    if (selectedCandidate === "") {
+        return;
+    }
+
+
+    hasVoted = true;
+
+
+    closeVoteModal();
+
+
+    const buttons =
+        document.querySelectorAll(
+            ".vote-btn"
+        );
+
+
+    buttons.forEach(function(button) {
+
+        button.disabled = true;
+
+        button.textContent =
+            "Vote Submitted";
+
+    });
+
+
+    /* Update vote count */
+
+    let voteCount =
+        parseInt(
+            document.getElementById(
+                "voteCount"
+            ).textContent.replace(",", "")
+        );
+
+
+    voteCount++;
+
+
+    document.getElementById(
+        "voteCount"
+    ).textContent =
+        voteCount.toLocaleString();
+
+
+    /* Update results */
+
+    updateResults(selectedCandidate);
+
+
+    /* Add activity */
+
+    addActivity(
+        "Vote successfully submitted for " +
+        selectedCandidate,
+        "✅"
+    );
+
+
+    showNotification(
+        "✅ Your vote has been recorded successfully!"
+    );
+
+}
+
+
+/* =========================
+   UPDATE RESULTS
+========================= */
+
+function updateResults(candidate) {
+
+    let id = "";
+
+
+    if (candidate === "Arun Kumar") {
+
+        id = "result1";
+
+    }
+
+    else if (candidate === "Priya Sharma") {
+
+        id = "result2";
+
+    }
+
+    else if (candidate === "Rahul Verma") {
+
+        id = "result3";
+
+    }
+
+    else if (candidate === "Meena Reddy") {
+
+        id = "result4";
+
+    }
+
+
+    if (id === "") {
+        return;
+    }
+
+
+    const result =
+        document.getElementById(id);
+
+
+    let percentage =
+        parseInt(result.textContent);
+
+
+    percentage += 1;
+
+
+    result.textContent =
+        percentage + "%";
+
+
+    const barId =
+        id.replace("result", "bar");
+
+
+    document.getElementById(
+        barId
+    ).style.width =
+        percentage + "%";
+
+}
+
+
+/* =========================
+   REGISTER VOTER
+========================= */
+
+function registerVoter() {
+
+    const name =
+        document.getElementById(
+            "voterName"
+        ).value.trim();
+
+
+    const voterId =
+        document.getElementById(
+            "voterId"
+        ).value.trim();
+
+
+    if (name === "" || voterId === "") {
+
+        showNotification(
+            "⚠️ Please enter your name and voter ID."
+        );
+
+        return;
+
+    }
+
+
+    let count =
+        parseInt(
+            document.getElementById(
+                "voterCount"
+            ).textContent.replace(",", "")
+        );
+
+
+    count++;
+
+
+    document.getElementById(
+        "voterCount"
+    ).textContent =
+        count.toLocaleString();
+
+
+    document.getElementById(
+        "voterName"
+    ).value = "";
+
+
+    document.getElementById(
+        "voterId"
+    ).value = "";
+
+
+    addActivity(
+        "New voter registered",
+        "👤"
+    );
+
+
+    showNotification(
+        "✅ Voter registered successfully!"
+    );
+
+}
+
+
+/* =========================
+   ACTIVITY
+========================= */
+
+function addActivity(message, icon) {
+
+    const list =
+        document.getElementById(
+            "activityList"
+        );
+
+
+    const item =
+        document.createElement("div");
+
+
+    item.className = "activity";
+
+
+    const currentTime =
+        new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit"
+        });
+
+
+    item.innerHTML = `
+
+        <div class="activity-icon">
+            ${icon}
+        </div>
+
+        <div>
+
+            <strong>
+                ${escapeHTML(message)}
+            </strong>
+
+            <small>
+                Today, ${currentTime}
+            </small>
+
+        </div>
+
+    `;
+
+
+    list.prepend(item);
+
+}
+
+
+/* =========================
+   SECURITY
+========================= */
+
+function escapeHTML(text) {
+
+    const div =
+        document.createElement("div");
+
+    div.textContent = text;
+
+    return div.innerHTML;
+
+}
+
+
+/* =========================
+   CLOSE MODAL ON OUTSIDE CLICK
+========================= */
+
+window.onclick = function(event) {
+
+    const modal =
+        document.getElementById(
+            "voteModal"
+        );
+
+
+    if (event.target === modal) {
+
+        closeVoteModal();
+
+    }
+
+};
+
+</script>
+
+</body>
+</html>
+```
